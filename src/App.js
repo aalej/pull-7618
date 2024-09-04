@@ -1,23 +1,25 @@
-import logo from './logo.svg';
 import './App.css';
+import { firebaseAuth } from './firebase';
+import { createUserWithEmailAndPassword, verifyBeforeUpdateEmail } from 'firebase/auth';
 
 function App() {
+  async function createUser() {
+    const email = 'fake@email.com'
+    const password = 'zxcvbn321'
+    const user = await createUserWithEmailAndPassword(firebaseAuth, email, password)
+    console.log("created user")
+  }
+
+  async function verifyAndUpdate() {
+    const user = firebaseAuth.currentUser
+    console.log(user)
+    await verifyBeforeUpdateEmail(user, process.env.REACT_APP_FIREBASE_REAL_EMAIL)
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={createUser}>Create user</button>
+      <button onClick={verifyAndUpdate}>Verify before update</button>
     </div>
   );
 }
